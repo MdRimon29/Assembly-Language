@@ -7,6 +7,7 @@
     msg_3 DB 'Enter the third capital letter: $'
     msg_4 DB 'The given capital letters in alphabetical order are: $'
     NEXT DB 0DH, 0AH, "$"
+    TEMP DB ?
 
 .CODE
 MAIN PROC
@@ -24,7 +25,6 @@ MAIN PROC
     INT 21H
     MOV BL, AL 
 
-    
     MOV AH, 9
     LEA DX, NEXT
     INT 21H
@@ -55,38 +55,38 @@ MAIN PROC
     INT 21H
     LEA DX, msg_4
     INT 21H
-    
 
     CMP BL, BH
-    JLE CHECK1   
-    XCHG BL, BH       
+    JLE CHECK1
+    MOV TEMP, BL
+    MOV BL, BH
+    MOV BH, TEMP
 
     CHECK1:
-    
     CMP BL, CL
-    JLE CHECK2   
-    XCHG BL, CL       
+    JLE CHECK2
+    MOV TEMP, BL
+    MOV BL, CL
+    MOV CL, TEMP
 
     CHECK2:
-    
     CMP BH, CL
-    JLE larger 
-    XCHG BH, CL       
+    JLE DISPLAY
+    MOV TEMP, BH
+    MOV BH, CL
+    MOV CL, TEMP
 
-    larger:
- 
+    DISPLAY:
     MOV AH, 2
-    
-    MOV DL, BL        
+    MOV DL, BL
     INT 21H
     
-    MOV DL, BH        
+    MOV DL, BH
     INT 21H
     
-    MOV DL, CL        
+    MOV DL, CL
     INT 21H
-    
-    END:
+
     MOV AH, 4CH
     INT 21H
 
